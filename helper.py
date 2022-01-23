@@ -6,6 +6,8 @@ from sklearn.preprocessing import MinMaxScaler
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense
 from tensorflow.keras.layers import LSTM
+import matplotlib.pyplot as plt
+
 
 def fetch_options():
 
@@ -26,6 +28,21 @@ def fetch_data(ticker):
     return df
 
 
+
+def display_loss_plot(model):
+
+    loss = model.history["loss"]
+    val_loss = model.history["val_loss"]
+
+    graph = {"Loss": loss,
+            "Val_Loss": val_loss}
+
+    graph = pd.DataFrame(graph)
+
+    return graph
+
+
+
 def convert_dataset_matrix(dataset, time_step=7):
 	dataX, dataY = [], []
 	for i in range(len(dataset)-time_step-1):
@@ -33,6 +50,7 @@ def convert_dataset_matrix(dataset, time_step=7):
 		dataX.append(a)
 		dataY.append(dataset[i + time_step, 0])
 	return np.array(dataX), np.array(dataY)
+
 
 
 def train_model(df):
@@ -58,9 +76,9 @@ def train_model(df):
     model.add(Dense(1))
     model.compile(loss='mean_squared_error',optimizer='adam')
 
-    model = model.fit(X_train,y_train,validation_data=(X_test,ytest),epochs=2,batch_size=64,verbose=1)
+    model = model.fit(X_train,y_train,validation_data=(X_test,ytest),epochs=50,batch_size=64,verbose=1)
 
     return model
 
 def predict():
-    
+    pass

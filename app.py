@@ -1,6 +1,6 @@
 from cProfile import label
 import streamlit as st
-from helper import fetch_options, fetch_data, train_model
+from helper import fetch_options, fetch_data, train_model, display_loss_plot
 
 st.set_page_config(
      page_title="Crypto Price Prediction",
@@ -22,4 +22,5 @@ st.number_input(label="Enter for how many future days you want to predict the {}
 if st.button("Apply"):
     data  = fetch_data(selected_asset_name)
     model = train_model(data)
-    #print(model.history["val_loss"][-1])
+    loss_plot = display_loss_plot(model)
+    st.line_chart(loss_plot)

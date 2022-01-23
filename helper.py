@@ -164,11 +164,10 @@ def predict():
     day_new=np.arange(1,101)
     day_pred=np.arange(101,131)
 
-    plt.plot(day_new,scaler.inverse_transform(df1[len(df1) - n_steps:]))
-    plt.plot(day_pred,scaler.inverse_transform(lst_output))
-    df3=df1.tolist()
-    df3.extend(lst_output)
-    plt.plot(df3[1200:])
+    plt.close()
+    plt.plot(day_new,scaler.inverse_transform(df1[len(df1) - n_steps:]), label="s")
+    plt.plot(day_pred,scaler.inverse_transform(lst_output), label="Future Prediction")
+    plt.legend()
     plt.savefig("files/pic1.png")
     plot = r"files/pic1.png"
 

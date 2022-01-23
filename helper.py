@@ -9,6 +9,9 @@ from tensorflow.keras.layers import LSTM
 import matplotlib.pyplot as plt
 
 
+epochs = 2
+
+
 def fetch_options():
 
     model = pickle.load(open("files/asset.pickle", 'rb'))
@@ -76,7 +79,7 @@ def train_model(df):
     model.add(Dense(1))
     model.compile(loss='mean_squared_error',optimizer='adam')
 
-    model = model.fit(X_train,y_train,validation_data=(X_test,ytest),epochs=50,batch_size=64,verbose=1)
+    model = model.fit(X_train,y_train,validation_data=(X_test,ytest),epochs=epochs,batch_size=64,verbose=1)
 
     return model
 

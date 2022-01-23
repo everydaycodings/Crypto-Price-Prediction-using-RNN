@@ -19,7 +19,7 @@ st.title("Crypto Price Prediction")
 selected_asset_name = st.selectbox("Select or Enter The Name of the Crypto Asset", options = fetch_options())
 st.number_input(label="Enter for how many future days you want to predict the {} market".format(selected_asset_name), min_value=10, max_value=100, value=30)
 
-if st.button("Apply"):
+if st.button("Predict"):
     data  = fetch_data(selected_asset_name)
     model = train_model(data)
     loss_plot = display_loss_plot(model)

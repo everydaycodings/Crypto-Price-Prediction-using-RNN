@@ -73,7 +73,7 @@ def convert_dataset_matrix(dataset, time_step=7):
 
 def train_model(df):
 
-    global X_train, X_test, scaler, df1
+    global X_train, X_test, scaler, df1, test_data
     df1=df.reset_index()['Close']
     scaler=MinMaxScaler(feature_range=(0,1))
     df1=scaler.fit_transform(np.array(df1).reshape(-1,1))
@@ -127,8 +127,52 @@ def display_accuracy_graph_plot():
     plot = r"files/pic.png"
     return plot
 
+
+
 def predict():
-    pass
+
+    model = load_model("model/model.hdf5")
+    lst_output=[]
+    n_steps=100
+    i=0
+
+    x_input=test_data[len(test_data) - n_steps:].reshape(1,-1)
+    temp_input=list(x_input)
+    temp_input=temp_input[0].tolist()
+
+    while(i<30):
+        
+        if(len(temp_input)>100):
+            #print(temp_input)
+            x_input=np.array(temp_input[1:])
+            x_input=x_input.reshape(1,-1)
+            x_input = x_input.reshape((1, n_steps, 1))
+            #print(x_input)
+            yhat = model.predict(x_input, verbose=0)
+            temp_input.extend(yhat[0].tolist())
+            temp_input=temp_input[1:]
+            #print(temp_input)
+            lst_output.extend(yhat.tolist())
+            i=i+1
+        else:
+            x_input = x_input.reshape((1, n_steps,1))
+            yhat = model.predict(x_input, verbose=0)
+            temp_input.extend(yhat[0].tolist())
+            lst_output.extend(yhat.tolist())
+            i=i+1
+    
+    day_new=np.arange(1,101)
+    day_pred=np.arange(101,131)
+
+    plt.plot(day_new,scaler.inverse_transform(df1[len(df1) - n_steps:]))
+    plt.plot(day_pred,scaler.inverse_transform(lst_output))
+    df3=df1.tolist()
+    df3.extend(lst_output)
+    plt.plot(df3[1200:])
+    plt.savefig("files/pic1.png")
+    plot = r"files/pic1.png"
+
+    return plot
 
 
 

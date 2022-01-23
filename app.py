@@ -1,6 +1,6 @@
 from cProfile import label
 import streamlit as st
-from helper import fetch_options, fetch_data, train_model, display_loss_plot, display_accuracy_graph_plot
+from helper import fetch_options, fetch_data, train_model, display_loss_plot, display_accuracy_graph_plot, predict
 
 st.set_option('deprecation.showPyplotGlobalUse', False)
 st.set_page_config(
@@ -27,3 +27,4 @@ if st.button("Predict"):
     loss_plot = display_loss_plot(model)
     st.line_chart(loss_plot)
     st.image(display_accuracy_graph_plot())
+    st.image(predict())

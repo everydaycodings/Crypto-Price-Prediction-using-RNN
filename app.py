@@ -21,6 +21,7 @@ st.number_input(label="Enter for how many future days you want to predict the {}
 
 if st.button("Predict"):
     data  = fetch_data(selected_asset_name)
+    st.dataframe(data)
     model = train_model(data)
     loss_plot = display_loss_plot(model)
     st.line_chart(loss_plot)

@@ -3,14 +3,27 @@ import time, datetime
 import pandas as pd
 import numpy as np
 from sklearn.preprocessing import MinMaxScaler
-from tensorflow.keras.models import Sequential
+from tensorflow.keras.models import Sequential, load_model
 from tensorflow.keras.layers import Dense
 from tensorflow.keras.layers import LSTM
+from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
 import matplotlib.pyplot as plt
 
 
 epochs = 2
 
+checkpoint_filepath = "model/model.hdf5"
+model_checkpoint_callback = ModelCheckpoint(
+    filepath=checkpoint_filepath,
+    save_weights_only=False,
+    monitor='val_loss',
+    mode="min",
+    save_best_only=True)
+
+callbacks = [
+             EarlyStopping(patience=10, monitor="val_loss", mode="min"),
+             model_checkpoint_callback,
+]
 
 def fetch_options():
 
@@ -57,6 +70,8 @@ def convert_dataset_matrix(dataset, time_step=7):
 
 
 def train_model(df):
+
+    global X_train, X_test, scaler
     df1=df.reset_index()['Close']
     scaler=MinMaxScaler(feature_range=(0,1))
     df1=scaler.fit_transform(np.array(df1).reshape(-1,1))
@@ -69,8 +84,10 @@ def train_model(df):
     X_train, y_train = convert_dataset_matrix(train_data, time_step)
     X_test, ytest = convert_dataset_matrix(test_data, time_step)
 
+
     X_train =X_train.reshape(X_train.shape[0],X_train.shape[1] , 1)
     X_test = X_test.reshape(X_test.shape[0],X_test.shape[1] , 1)
+
 
     model=Sequential()
     model.add(LSTM(50,return_sequences=True,input_shape=(100,1)))
@@ -79,9 +96,35 @@ def train_model(df):
     model.add(Dense(1))
     model.compile(loss='mean_squared_error',optimizer='adam')
 
-    model = model.fit(X_train,y_train,validation_data=(X_test,ytest),epochs=epochs,batch_size=64,verbose=1)
+    model = model.fit(X_train,y_train,validation_data=(X_test,ytest),epochs=epochs,batch_size=64,verbose=1, callbacks = callbacks)
 
     return model
 
+def display_accuracy_graph_plot(df1):
+    model = load_model("model/model.hdf5")
+    train_predict=model.predict(X_train)
+    test_predict=model.predict(X_test)
+
+    train_predict=scaler.inverse_transform(train_predict)
+    test_predict=scaler.inverse_transform(test_predict)
+
+    look_back=100
+    trainPredictPlot = np.empty_like(df1)
+    trainPredictPlot[:, :] = np.nan
+    trainPredictPlot[look_back:len(train_predict)+look_back, :] = train_predict
+    # shift test predictions for plotting
+    testPredictPlot = np.empty_like(df1)
+    testPredictPlot[:, :] = np.nan
+    testPredictPlot[len(train_predict)+(look_back*2)+1:len(df1)-1, :] = test_predict
+    # plot baseline and predictions
+    plt.plot(scaler.inverse_transform(df1))
+    plt.plot(trainPredictPlot)
+    plt.plot(testPredictPlot)
+    plot = plt.show()
+    return plot
+
 def predict():
     pass
+
+
+

@@ -27,4 +27,6 @@ if st.button("Predict"):
     loss_plot = display_loss_plot(model)
     st.line_chart(loss_plot)
     st.image(display_accuracy_graph_plot())
-    st.image(predict())
+    plot, plot1 = predict()
+    st.image(plot)
+    st.image(plot1)

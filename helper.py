@@ -9,12 +9,13 @@ from tensorflow.keras.layers import Dense
 from tensorflow.keras.layers import LSTM
 from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
 import matplotlib.pyplot as plt
+import os
 
 
 epochs = 2
 plt.figure(figsize=(8,6))
 
-checkpoint_filepath = "model/model.hdf5"
+checkpoint_filepath = "temp/model.hdf5"
 model_checkpoint_callback = ModelCheckpoint(
     filepath=checkpoint_filepath,
     save_weights_only=False,
@@ -29,9 +30,9 @@ callbacks = [
 
 def fetch_options():
 
-    model = pickle.load(open("files/asset.pickle", 'rb'))
+    asset_file = pickle.load(open("files/asset.pickle", 'rb'))
 
-    return model
+    return asset_file
 
 
 def fetch_data(ticker):
@@ -103,7 +104,7 @@ def train_model(df):
     return model
 
 def display_accuracy_graph_plot():
-    model = load_model("model/model.hdf5")
+    model = load_model("temp/model.hdf5")
     train_predict=model.predict(X_train)
     test_predict=model.predict(X_test)
 
@@ -123,15 +124,16 @@ def display_accuracy_graph_plot():
     plt.plot(trainPredictPlot, label="trained Dataset")
     plt.plot(testPredictPlot, label="Predicted data")
     plt.legend()
-    plt.savefig("files/pic.png")
-    plot = r"files/pic.png"
+    pic_path = "temp/pic.png"
+    plt.savefig(pic_path)
+    plot = pic_path
     return plot
 
 
 
 def predict():
 
-    model = load_model("model/model.hdf5")
+    model = load_model("temp/model.hdf5")
     lst_output=[]
     n_steps=100
     i=0
@@ -165,13 +167,22 @@ def predict():
     day_pred=np.arange(101,131)
 
     plt.close()
-    plt.plot(day_new,scaler.inverse_transform(df1[len(df1) - n_steps:]), label="s")
+    plt.plot(day_new,scaler.inverse_transform(df1[len(df1) - n_steps:]), label="Current Graph")
     plt.plot(day_pred,scaler.inverse_transform(lst_output), label="Future Prediction")
     plt.legend()
-    plt.savefig("files/pic1.png")
-    plot = r"files/pic1.png"
+    pic_path = "temp/pic1.png"
+    plt.savefig(pic_path)
+    plot = pic_path
 
-    return plot
+    plt.close()
+    df3=df1.tolist()
+    df3.extend(lst_output)
+    plt.plot(df3[1200:])
+    pic_path = "temp/pic2.png"
+    plt.savefig(pic_path)
+    plot1 = pic_path
+
+    return plot, plot1
 
 
 

@@ -2,6 +2,7 @@ from cProfile import label
 import streamlit as st
 from helper import fetch_options, fetch_data, train_model, display_loss_plot, display_accuracy_graph_plot
 
+st.set_option('deprecation.showPyplotGlobalUse', False)
 st.set_page_config(
      page_title="Crypto Price Prediction",
      page_icon="🧊",
@@ -25,4 +26,4 @@ if st.button("Predict"):
     model = train_model(data)
     loss_plot = display_loss_plot(model)
     st.line_chart(loss_plot)
-    st.pyplot(display_accuracy_graph_plot(data))
+    st.image(display_accuracy_graph_plot())

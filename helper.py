@@ -1,3 +1,4 @@
+from cProfile import label
 import pickle
 import time, datetime
 import pandas as pd
@@ -11,6 +12,7 @@ import matplotlib.pyplot as plt
 
 
 epochs = 2
+plt.figure(figsize=(8,6))
 
 checkpoint_filepath = "model/model.hdf5"
 model_checkpoint_callback = ModelCheckpoint(
@@ -71,7 +73,7 @@ def convert_dataset_matrix(dataset, time_step=7):
 
 def train_model(df):
 
-    global X_train, X_test, scaler
+    global X_train, X_test, scaler, df1
     df1=df.reset_index()['Close']
     scaler=MinMaxScaler(feature_range=(0,1))
     df1=scaler.fit_transform(np.array(df1).reshape(-1,1))
@@ -100,7 +102,7 @@ def train_model(df):
 
     return model
 
-def display_accuracy_graph_plot(df1):
+def display_accuracy_graph_plot():
     model = load_model("model/model.hdf5")
     train_predict=model.predict(X_train)
     test_predict=model.predict(X_test)
@@ -117,10 +119,12 @@ def display_accuracy_graph_plot(df1):
     testPredictPlot[:, :] = np.nan
     testPredictPlot[len(train_predict)+(look_back*2)+1:len(df1)-1, :] = test_predict
     # plot baseline and predictions
-    plt.plot(scaler.inverse_transform(df1))
-    plt.plot(trainPredictPlot)
-    plt.plot(testPredictPlot)
-    plot = plt.show()
+    plt.plot(scaler.inverse_transform(df1), label="complete Dataset")
+    plt.plot(trainPredictPlot, label="trained Dataset")
+    plt.plot(testPredictPlot, label="Predicted data")
+    plt.legend()
+    plt.savefig("files/pic.png")
+    plot = r"files/pic.png"
     return plot
 
 def predict():

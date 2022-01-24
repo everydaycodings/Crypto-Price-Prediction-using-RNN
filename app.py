@@ -24,7 +24,9 @@ days = 30#st.number_input(label="Enter for how many future days you want to pred
 if st.button("Predict"):
     data  = fetch_data(selected_asset_name)
     st.dataframe(data)
+    st.info("Model will be train within {} second(also depends upon your pc computing power) so please have patience (model epochs=100)".format((100*2) + 10))
     model = train_model(data)
+    st.success('Your Model Has been Trainned.')
     col1, col2= st.columns(2)
 
     with col1:

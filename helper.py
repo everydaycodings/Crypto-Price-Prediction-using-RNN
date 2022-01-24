@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 import os
 
 
-epochs = 2
+epochs = 100
 plt.figure(figsize=(5,6))
 
 checkpoint_filepath = "temp/model.hdf5"

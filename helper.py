@@ -24,7 +24,7 @@ model_checkpoint_callback = ModelCheckpoint(
     save_best_only=True)
 
 callbacks = [
-             EarlyStopping(patience=10, monitor="val_loss", mode="min"),
+             EarlyStopping(patience=50, monitor="val_loss", mode="min"),
              model_checkpoint_callback,
 ]
 

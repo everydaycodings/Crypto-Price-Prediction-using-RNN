@@ -13,7 +13,7 @@ import os
 
 
 epochs = 2
-plt.figure(figsize=(8,6))
+plt.figure(figsize=(5,6))
 
 checkpoint_filepath = "temp/model.hdf5"
 model_checkpoint_callback = ModelCheckpoint(

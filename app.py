@@ -24,9 +24,20 @@ if st.button("Predict"):
     data  = fetch_data(selected_asset_name)
     st.dataframe(data)
     model = train_model(data)
-    loss_plot = display_loss_plot(model)
-    st.line_chart(loss_plot)
-    st.image(display_accuracy_graph_plot())
+    col1, col2= st.columns(2)
+
+    with col1:
+        loss_plot = display_loss_plot(model)
+        st.line_chart(loss_plot, height=460)
+
+    with col2:
+        st.image(display_accuracy_graph_plot())
+
+    col3, col4 = st.columns(2)
+
     plot, plot1 = predict()
-    st.image(plot)
-    st.image(plot1)
+    with col3:
+        st.image(plot)
+    
+    with col4:
+        st.image(plot1)

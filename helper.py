@@ -93,7 +93,7 @@ def train_model(df):
 
 
     model=Sequential()
-    model.add(LSTM(50,return_sequences=True,input_shape=(100,1)))
+    model.add(LSTM(50,return_sequences=True,input_shape=(X_train.shape[1],1)))
     model.add(LSTM(50,return_sequences=True))
     model.add(LSTM(50))
     model.add(Dense(1))

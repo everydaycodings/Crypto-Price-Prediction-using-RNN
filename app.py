@@ -9,8 +9,8 @@ st.set_page_config(
      layout="wide",
      initial_sidebar_state="expanded",
      menu_items={
-         'Get Help': 'https://github.com/everydaycodings/Anima-Recommendation-System-WebApp#readme',
-         'Report a bug': "https://github.com/everydaycodings/Anima-Recommendation-System-WebApp/issues/new/choose",
+         'Get Help': 'https://github.com/everydaycodings/Crypto-Price-Prediction-using-RNN',
+         'Report a bug': "https://github.com/everydaycodings/Crypto-Price-Prediction-using-RNN/issues/new",
          'About': "# This is a header. This is an *extremely* cool app!"
      }
 )
